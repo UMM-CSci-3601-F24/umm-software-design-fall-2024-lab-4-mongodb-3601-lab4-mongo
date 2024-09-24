@@ -4,7 +4,10 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
+import java.util.ArrayList;
+
 import org.bson.UuidRepresentation;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
@@ -60,13 +63,41 @@ public class TodoController implements Controller{
   }
 
   public void getTodos(Context ctx) { //gets more than one todo
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getTodos'");
+    Bson combinedFilter = constructFilter(ctx);
+    Bson sortingOrder = constructSortingOrder(ctx);
+
+    ArrayList<Todo> matchingTodos = todoCollection
+        .find(combinedFilter)
+        .sort(sortingOrder)
+        .into(new ArrayList<>());
+
+    ctx.json(matchingTodos);
+    ctx.status(HttpStatus.OK);
   }
 
-  public void addRoutes(Javalin mockServer) {
+  private Bson constructSortingOrder(Context ctx) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'addRoutes'");
+    throw new UnsupportedOperationException("Unimplemented method 'constructSortingOrder'");
   }
 
+  private Bson constructFilter(Context ctx) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'constructFilter'");
+  }
+
+  public void addRoutes(Javalin server) {
+    // Get the specified user
+    server.get(API_TODO_BY_ID, this::getTodo);
+
+    // List users, filtered using query parameters
+    server.get(API_TODOS, this::getTodos);
+
+
+    // // Delete the specified user
+    // server.delete(API_TODO_BY_ID, this::deleteTodo);
+
+    // // Add new user with the user info being in the JSON body
+    // // of the HTTP request
+    // server.post(API_TODOS, this::addNewTodo);
+  }
 }
