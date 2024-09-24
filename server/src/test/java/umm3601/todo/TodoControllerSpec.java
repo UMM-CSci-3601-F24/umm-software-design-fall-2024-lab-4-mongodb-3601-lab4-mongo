@@ -85,11 +85,29 @@ public class TodoControllerSpec {
     testTodos.add(
       new Document()
           .append("owner", "Blanche")
-          .append("status", "complete")); //will need to check if this should be complete or true
+          .append("status", false)
+          .append("body", "In sunt ex non tempor cillum commodo amet incididunt anim qui commodo quis. Cillum non labore ex sint esse.")
+          .append("category", "software design")
+      ); //will need to check if this should be complete or true
     samsId = new ObjectId();
     Document sam = new Document()
-        .append("_id", samsId)
-        .append("owner", "Sam");
+        .append("_id", "58af3a600343927e48e8720f")
+        .append("owner", "Blanche");
+      testTodos.add(
+        new Document()
+            .append("owner", "Fry")
+            .append("status", false)
+            .append("body", "Ipsum esse est ullamco magna tempor anim laborum non officia deserunt veniam commodo. Aute minim incididunt ex commodo.")
+            .append("category", "video games")
+      );
+      testTodos.add(
+        new Document()
+            .append("owner", "Fry")
+            .append("status", true)
+            .append("body", "Ullamco irure laborum magna dolor non. Anim occaecat adipisicing cillum eu magna in.")
+            .append("category", "homework")
+      );
+
 
     todoDocuments.insertMany(testTodos);
     todoDocuments.insertOne(sam);
