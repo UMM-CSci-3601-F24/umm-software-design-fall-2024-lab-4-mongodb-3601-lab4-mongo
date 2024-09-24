@@ -85,7 +85,7 @@ public class TodoControllerSpec {
     testTodos.add(
       new Document()
           .append("owner", "Blanche")
-          .append("status", "complete")); //will need to check if this should be complete or true
+          .append("status", true)); //will need to check if this should be complete or true
     samsId = new ObjectId();
     Document sam = new Document()
         .append("_id", samsId)
