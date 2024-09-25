@@ -13,6 +13,8 @@ public class Todo {
   @SuppressWarnings({"MemberName"})
   public String _id;
   public String owner;
+  public String category;
+  public String body;
 
 
   @Override
