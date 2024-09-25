@@ -29,6 +29,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
+import umm3601.user.UserByCompany;
 
 public class TodoController implements Controller {
 
@@ -75,8 +76,16 @@ public class TodoController implements Controller {
   }
 
   public void getTodos(Context ctx) { //gets more than one todo
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getTodos'");
+    Bson combinedFilter = constructFilter(ctx);
+    Bson sortingOrder = constructSortingOrder(ctx);
+
+    ArrayList<Todo> matchingTodos = todoCollection
+        .find(combinedFilter)
+        .sort(sortingOrder)
+        .into(new ArrayList<>());
+
+    ctx.json(matchingTodos);
+    ctx.status(HttpStatus.OK);
   }
 
   public void addRoutes(Javalin mockServer) {
@@ -104,5 +113,35 @@ public class TodoController implements Controller {
     return sortingOrder;
   }
 
+  public void addNewTodo(Context ctx) {
+    String body = ctx.body();
+    Todo newTodo = ctx.bodyValidator(Todo.class)
+        .check(todo -> todo.owner != null && todo.owner.length() > 0,
+            "User must have a non-empty user name; body was " + body)
+        .check(todo -> todo.body != null && todo.body.length() > 0,
+            "Todos's body must be greater than zero; body was " + body)
+        .check(todo -> todo.category != null && todo.category.length() > 0,
+            "Todos's category must be greater than zero; body was " + body)
+        .get();
+    todoCollection.insertOne(newTodo);
+
+    ctx.json(Map.of("id", newTodo._id));
+    ctx.status(HttpStatus.CREATED);
+  }
+
+  public void deleteTodo(Context ctx) {
+    String id = ctx.pathParam("id");
+    DeleteResult deleteResult = todoCollection.deleteOne(eq("_id", new ObjectId(id)));
+    // We should have deleted 1 or 0 users, depending on whether `id` is a valid
+    // user ID.
+    if (deleteResult.getDeletedCount() != 1) {
+      ctx.status(HttpStatus.NOT_FOUND);
+      throw new NotFoundResponse(
+          "Was unable to delete ID "
+              + id
+              + "; perhaps illegal ID or an ID for an item not in the system?");
+    }
+    ctx.status(HttpStatus.OK);
+  }
 
 }
