@@ -34,6 +34,9 @@ public class TodoController implements Controller {
   private static final String API_TODOS = "/api/todos";
   private static final String API_TODO_BY_ID = "/api/todos/{id}";
   static final String OWNER_KEY = "owner";
+  static final String CATEGORY_KEY = "category";
+  static final String BODY_KEY = "body";
+  static final String STATUS_KEY = "status";
   static final String SORT_ORDER_KEY = "sortorder";
 
 
@@ -106,6 +109,18 @@ public class TodoController implements Controller {
       if (ctx.queryParamMap().containsKey(OWNER_KEY)) {
         Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(OWNER_KEY)), Pattern.CASE_INSENSITIVE);
         filters.add(regex(OWNER_KEY, pattern));
+      }
+      if (ctx.queryParamMap().containsKey(CATEGORY_KEY)) {
+          Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(CATEGORY_KEY)), Pattern.CASE_INSENSITIVE);
+          filters.add(regex(CATEGORY_KEY, pattern));
+      }
+      if (ctx.queryParamMap().containsKey(BODY_KEY)) {
+            Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(BODY_KEY)), Pattern.CASE_INSENSITIVE);
+            filters.add(regex(BODY_KEY, pattern));
+      }
+      if (ctx.queryParamMap().containsKey(STATUS_KEY)) {
+              Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(STATUS_KEY)), Pattern.CASE_INSENSITIVE);
+              filters.add(regex(STATUS_KEY, pattern));
       }
 
       // Combine the list of filters into a single filtering document.

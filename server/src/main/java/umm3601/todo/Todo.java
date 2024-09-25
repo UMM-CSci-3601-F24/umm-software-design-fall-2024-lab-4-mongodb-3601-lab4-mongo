@@ -15,6 +15,7 @@ public class Todo {
   public String owner;
   public String category;
   public String body;
+  public boolean status;
 
 
   @Override
