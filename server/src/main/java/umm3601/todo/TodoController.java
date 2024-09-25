@@ -4,14 +4,24 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
+import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -20,12 +30,14 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
 
-public class TodoController implements Controller{
+public class TodoController implements Controller {
 
   private static final String API_TODOS = "/api/todos";
   private static final String API_TODO_BY_ID = "/api/todos/{id}";
-  static final String CATEGORY_KEY = "category";
+  static final String OWNER_KEY = "owner";
   static final String STATUS_KEY = "status";
+  static final String BODY_KEY = "body";
+  static final String CATEGORY_KEY = "category";
 
   static final String SORT_ORDER_KEY = "sortorder";
 
@@ -63,41 +75,34 @@ public class TodoController implements Controller{
   }
 
   public void getTodos(Context ctx) { //gets more than one todo
-    Bson combinedFilter = constructFilter(ctx);
-    Bson sortingOrder = constructSortingOrder(ctx);
-
-    ArrayList<Todo> matchingTodos = todoCollection
-        .find(combinedFilter)
-        .sort(sortingOrder)
-        .into(new ArrayList<>());
-
-    ctx.json(matchingTodos);
-    ctx.status(HttpStatus.OK);
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getTodos'");
   }
 
-  private Bson constructSortingOrder(Context ctx) {
+  public void addRoutes(Javalin mockServer) {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'constructSortingOrder'");
+    throw new UnsupportedOperationException("Unimplemented method 'addRoutes'");
   }
 
   private Bson constructFilter(Context ctx) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'constructFilter'");
+    List<Bson> filters = new ArrayList<>(); // start with an empty list of filters
+
+    if (ctx.queryParamMap().containsKey(OWNER_KEY)) {
+      Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(OWNER_KEY)), Pattern.CASE_INSENSITIVE);
+      filters.add(regex(OWNER_KEY, pattern));
+    }
+
+    Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
+
+    return combinedFilter;
   }
 
-  public void addRoutes(Javalin server) {
-    // Get the specified user
-    server.get(API_TODO_BY_ID, this::getTodo);
-
-    // List users, filtered using query parameters
-    server.get(API_TODOS, this::getTodos);
-
-
-    // // Delete the specified user
-    // server.delete(API_TODO_BY_ID, this::deleteTodo);
-
-    // // Add new user with the user info being in the JSON body
-    // // of the HTTP request
-    // server.post(API_TODOS, this::addNewTodo);
+  private Bson constructSortingOrder(Context ctx) {
+    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortby"), "name"); // what are we sorting by
+    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortorder"), "asc");
+    Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+    return sortingOrder;
   }
+
+
 }
