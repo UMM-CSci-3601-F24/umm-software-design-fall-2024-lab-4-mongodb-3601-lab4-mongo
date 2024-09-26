@@ -28,6 +28,7 @@ import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
+import io.javalin.validation.Validator;
 import umm3601.Controller;
 
 public class TodoController implements Controller {
@@ -100,6 +101,13 @@ public class TodoController implements Controller {
       System.err.println(OWNER_KEY);
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(OWNER_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(OWNER_KEY, pattern));
+    }
+
+    if (ctx.queryParamMap().containsKey(STATUS_KEY)) {
+    Validator<Boolean> statusToString = ctx.queryParamAsClass(STATUS_KEY, Boolean.class);
+      System.err.println(ctx.queryParamMap());
+      System.err.println(STATUS_KEY);
+      filters.add(eq(STATUS_KEY, statusToString));
     }
 
     Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);

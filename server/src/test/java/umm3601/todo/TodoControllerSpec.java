@@ -169,4 +169,19 @@ public class TodoControllerSpec {
       assertEquals("Fry", todo.owner);
     }
   }
+
+  @Test
+  void getTodosByStatus() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String statusString = "true";
+    queryParams.put(TodoController.STATUS_KEY, Arrays.asList(new String[] {statusString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(1, todoArrayListCaptor.getValue().size());
+  }
 }
