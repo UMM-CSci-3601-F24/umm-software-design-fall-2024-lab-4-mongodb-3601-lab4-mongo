@@ -91,4 +91,8 @@ export class TodoService {
       return this.httpClient.post<{id: string}>(this.todoUrl, newTodo).pipe(map(res => res.id));
     }
 
+    deleteTodo(todoId: string): Observable<{ id: string}> {
+      return this.httpClient.delete<{id: string}>(`${this.todoUrl}/${todoId}`); // .pipe(map(res => res.id));
+    }
+
 }

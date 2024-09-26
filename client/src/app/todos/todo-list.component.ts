@@ -89,6 +89,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
 
+
   getTodosFromServer() {
 
     this.todoService
@@ -138,6 +139,27 @@ export class TodoListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  deleteTodo(todoId) {
+    console.log("Trying to delete todo with id " + todoId)
+    this.todoService.deleteTodo(todoId).subscribe({
+      next: () => {
+        this.snackBar.open(
+          `deleted todo`,
+          null,
+          { duration: 2000 }
+        );
+        this.getTodosFromServer();
+      },
+      error: err => {
+        this.snackBar.open(
+          `Problem contacting the server – Error Code: ${err.status}\nMessage: ${err.message}`,
+          'OK',
+          { duration: 5000 }
+        );
+      },
+    });
   }
 }
 

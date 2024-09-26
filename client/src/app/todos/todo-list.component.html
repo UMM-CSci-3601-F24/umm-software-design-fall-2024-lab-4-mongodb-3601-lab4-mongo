@@ -97,6 +97,13 @@
         </mat-expansion-panel-header>
         <p class="todo-body"> Body: {{ todo.body }} </p>
         <p class="todo-owner"> Owner: {{todo.owner}} </p>
+        <button
+        mat-button
+            type="button"
+            (click)="deleteTodo(todo._id)"
+            color="primary"
+            type="delete"
+            data-test="confirmDeleteTodoButton">NUKE TODO</button>
 
 
       </mat-expansion-panel>
