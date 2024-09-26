@@ -29,7 +29,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
-import umm3601.user.UserByCompany;
 
 public class TodoController implements Controller {
 
@@ -97,6 +96,8 @@ public class TodoController implements Controller {
     List<Bson> filters = new ArrayList<>(); // start with an empty list of filters
 
     if (ctx.queryParamMap().containsKey(OWNER_KEY)) {
+      System.err.println(ctx.queryParamMap());
+      System.err.println(OWNER_KEY);
       Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(OWNER_KEY)), Pattern.CASE_INSENSITIVE);
       filters.add(regex(OWNER_KEY, pattern));
     }
