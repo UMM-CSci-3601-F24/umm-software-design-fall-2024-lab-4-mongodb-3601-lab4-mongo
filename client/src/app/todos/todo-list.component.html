@@ -14,7 +14,33 @@
         <div class="flex-row gap-8 flex-warp">
           <p>look at user equivalant to see examples of filtering on server</p>
         </div>
+
+        <br>
+        <div class="flex-row gap-8 flex-wrap">
+          <label for="viewType">View type: </label>
+          <mat-radio-group aria-label="View type" [(ngModel)]="viewType" data-test="viewTypeRadio">
+            <mat-radio-button value="card">Card</mat-radio-button>
+            <mat-radio-button value="list">List</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
       </mat-card-content>
     </mat-card>
   </div>
+</div>
+
+<div class="flex-row">
+  @if(serverFilteredTodos()) {
+    <div class="flex-1">
+      @switch (viewType()) {
+        @case ('card') {
+          <div class="todo-card-container flex-row gap-8 flex-wrap">
+            @for (todo of filteredTodos(); track todo._id) {
+              <app-todo-card [simple]="true" class="todo-card" [todo]="todo" ></app-todo-card>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
 </div>
