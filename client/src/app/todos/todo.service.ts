@@ -10,8 +10,20 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TodoService {
-readonly todoUrl: string = environment.apiUrl + 'todos';
-  constructor(private httpClient: HttpClient) { }
+  readonly todoUrl: string = `${environment.apiUrl}todos`;
+
+  private readonly categoryKey = 'category';
+  private readonly ownerKey = 'owner';
+  private readonly bodyKey = 'body';
+  private readonly statusKey = 'status';
+
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  getTodoById(id: string): Observable<Todo> {
+    return this.httpClient.get<Todo>(`${this.todoUrl}/${id}`);
+  }
 
   getTodos(filters?: {
     status?: boolean;

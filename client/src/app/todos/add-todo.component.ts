@@ -38,27 +38,21 @@ export class AddTodoComponent {
       // very long names. This demonstrates that it's possible, though,
       // to have maximum length limits. name
       Validators.maxLength(50),
-      (fc) => {
-        if (fc.value.toLowerCase() === 'abc123' || fc.value.toLowerCase() === '123abc') {
-          return ({existingOwner: true});
-        } else {
-          return null;
-        }
-      },
     ])),
 
 
     category: new FormControl('', Validators.compose([
       Validators.required,
-      Validators.min(6),
-      Validators.max(25),
+      Validators.minLength(6),
+      Validators.maxLength(25),
     ])),
 
     body: new FormControl('', Validators.compose([
       Validators.required,
-      Validators.min(6),
-      Validators.max(300),
+      Validators.minLength(6),
     ])),
+
+    status: new FormControl<boolean>(false),
 
   });
 
@@ -72,17 +66,18 @@ export class AddTodoComponent {
       {type: 'maxlength', message: 'Owner cannot be more than 50 characters long'},
     ],
 
-    body: [
-      {type: 'required', message: 'Body is required'},
-      {type: 'minlength', message: 'Body must be at least 6 characters long'},
-      {type: 'maxlength', message: 'Owner cannot be more than 300 characters long'},
-    ],
-
     category: [
       {type: 'required', message: 'Category is required'},
       {type: 'minlength', message: 'Category must be at least 6 characters long'},
       {type: 'maxlength', message: 'Category cannot be more than 25 characters long'},
     ],
+
+    body: [
+      {type: 'required', message: 'Body is required'},
+      {type: 'minlength', message: 'Body must be at least 6 characters long'},
+    ],
+
+    status: [ ],
   };
 
   constructor(
@@ -107,13 +102,13 @@ export class AddTodoComponent {
 
   submitForm() {
     this.todoService.addTodo(this.addTodoForm.value).subscribe({
-      next: (newId) => {
+      next: () => {
         this.snackBar.open(
           `Added todo ${this.addTodoForm.value.owner}`,
           null,
           { duration: 2000 }
         );
-        this.router.navigate(['/todos/', newId]);
+        this.router.navigate(['/todos/']);
       },
       error: err => {
         this.snackBar.open(

@@ -9,7 +9,7 @@
           <div class="flex-col">
             <mat-form-field>
               <mat-label>Owner</mat-label>
-              <input matInput formControlOwner="owner"
+              <input matInput formControlName="owner"
                 required>
               @if (formControlHasError('owner')) {
                 <mat-error data-test="ownerError">
@@ -20,8 +20,8 @@
 
             <mat-form-field>
               <mat-label>Category</mat-label>
-              <input matInput type="category"
-                formControlCategory="category" required>
+              <input matInput
+                formControlName="category" required>
               @if (formControlHasError('category')) {
                 <mat-error data-test="categoryError">
                   {{getErrorMessage('category')}}
@@ -31,8 +31,8 @@
 
             <mat-form-field>
               <mat-label>Body</mat-label>
-              <input matInput type="body"
-                formControlBody="body" required>
+              <input matInput
+                formControlName="body" required>
               @if (formControlHasError('body')) {
                 <mat-error data-test="bodyError">
                   {{getErrorMessage('body')}}
