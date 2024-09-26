@@ -1,33 +1,33 @@
 package umm3601.todo;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.regex;
+// import static com.mongodb.client.model.Filters.and;
+// import static com.mongodb.client.model.Filters.eq;
+// import static com.mongodb.client.model.Filters.regex;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Pattern;
+// import java.nio.charset.StandardCharsets;
+// import java.security.MessageDigest;
+// import java.security.NoSuchAlgorithmException;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Map;
+// import java.util.Objects;
+// import java.util.regex.Pattern;
 
-import org.bson.Document;
+// import org.bson.Document;
 import org.bson.UuidRepresentation;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
+// import org.bson.conversions.Bson;
+// import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.result.DeleteResult;
+// import com.mongodb.client.model.Sorts;
+// import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
+// import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
-import io.javalin.http.HttpStatus;
-import io.javalin.http.NotFoundResponse;
+// import io.javalin.http.HttpStatus;
+// import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
 
 /**
@@ -35,8 +35,8 @@ import umm3601.Controller;
  */
 public class TodoController implements Controller {
 
-  private static final String API_TODOS = "/api/todos";
-  private static final String API_TODO_BY_ID = "/api/todos/{id}";
+  // private static final String API_TODOS = "/api/todos";
+  // private static final String API_TODO_BY_ID = "/api/todos/{id}";
   // static final String AGE_KEY = "age";
   static final String CATEGORY_KEY = "category";
   // static final String ROLE_KEY = "role";
@@ -91,29 +91,29 @@ public class TodoController implements Controller {
    *
    * @param ctx a Javalin HTTP context
    */
-  public void getTodos(Context ctx) {
-    Bson combinedFilter = constructFilter(ctx);
-    Bson sortingOrder = constructSortingOrder(ctx);
+  // public void getTodos(Context ctx) {
+  //   Bson combinedFilter = constructFilter(ctx);
+  //   Bson sortingOrder = constructSortingOrder(ctx);
 
-    // All three of the find, sort, and into steps happen "in parallel" inside the
-    // database system. So MongoDB is going to find the users with the specified
-    // properties, return those sorted in the specified manner, and put the
-    // results into an initially empty ArrayList.
-    ArrayList<Todo> matchingTodos = todoCollection
-        .find(combinedFilter)
-        .sort(sortingOrder)
-        .into(new ArrayList<>());
+  //   // All three of the find, sort, and into steps happen "in parallel" inside the
+  //   // database system. So MongoDB is going to find the users with the specified
+  //   // properties, return those sorted in the specified manner, and put the
+  //   // results into an initially empty ArrayList.
+  //   ArrayList<Todo> matchingTodos = todoCollection
+  //       .find(combinedFilter)
+  //       .sort(sortingOrder)
+  //       .into(new ArrayList<>());
 
-    // Set the JSON body of the response to be the list of users returned by the
-    // database.
-    // According to the Javalin documentation
-    // (https://javalin.io/documentation#context),
-    // this calls result(jsonString), and also sets content type to json
-    ctx.json(matchingTodos);
+  //   // Set the JSON body of the response to be the list of users returned by the
+  //   // database.
+  //   // According to the Javalin documentation
+  //   // (https://javalin.io/documentation#context),
+  //   // this calls result(jsonString), and also sets content type to json
+  //   ctx.json(matchingTodos);
 
-    // Explicitly set the context status to OK
-    ctx.status(HttpStatus.OK);
-  }
+  //   // Explicitly set the context status to OK
+  //   ctx.status(HttpStatus.OK);
+  // }
 
   /**
    * Construct a Bson filter document to use in the `find` method based on the
@@ -128,43 +128,43 @@ public class TodoController implements Controller {
    * @return a Bson filter document that can be used in the `find` method
    *         to filter the database collection of users
    */
-  private Bson constructFilter(Context ctx) {
-    List<Bson> filters = new ArrayList<>(); // start with an empty list of filters
+  // private Bson constructFilter(Context ctx) {
+  //   List<Bson> filters = new ArrayList<>(); // start with an empty list of filters
 
-    // if (ctx.queryParamMap().containsKey(AGE_KEY)) {
-    //   int targetAge = ctx.queryParamAsClass(AGE_KEY, Integer.class)
-    //       .check(it -> it > 0, "User's age must be greater than zero; you provided " + ctx.queryParam(AGE_KEY))
-    //       .check(it -> it < REASONABLE_AGE_LIMIT,
-    //           "User's age must be less than " + REASONABLE_AGE_LIMIT + "; you provided " + ctx.queryParam(AGE_KEY))
-    //       .get();
-    //   filters.add(eq(AGE_KEY, targetAge));
-    // }
-    // if (ctx.queryParamMap().containsKey(COMPANY_KEY)) {
-    //   Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(COMPANY_KEY)), Pattern.CASE_INSENSITIVE);
-    //   filters.add(regex(COMPANY_KEY, pattern));
-    // }
-    // if (ctx.queryParamMap().containsKey(ROLE_KEY)) {
-    //   String role = ctx.queryParamAsClass(ROLE_KEY, String.class)
-    //       .check(it -> it.matches(ROLE_REGEX), "User must have a legal user role")
-    //       .get();
-    //   filters.add(eq(ROLE_KEY, role));
-    // }
+  //   // if (ctx.queryParamMap().containsKey(AGE_KEY)) {
+  //   //   int targetAge = ctx.queryParamAsClass(AGE_KEY, Integer.class)
+  //   //       .check(it -> it > 0, "User's age must be greater than zero; you provided " + ctx.queryParam(AGE_KEY))
+  //   //       .check(it -> it < REASONABLE_AGE_LIMIT,
+  //   //           "User's age must be less than " + REASONABLE_AGE_LIMIT + "; you provided " + ctx.queryParam(AGE_KEY))
+  //   //       .get();
+  //   //   filters.add(eq(AGE_KEY, targetAge));
+  //   // }
+  //   // if (ctx.queryParamMap().containsKey(COMPANY_KEY)) {
+  //   //   Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(COMPANY_KEY)), Pattern.CASE_INSENSITIVE);
+  //   //   filters.add(regex(COMPANY_KEY, pattern));
+  //   // }
+  //   // if (ctx.queryParamMap().containsKey(ROLE_KEY)) {
+  //   //   String role = ctx.queryParamAsClass(ROLE_KEY, String.class)
+  //   //       .check(it -> it.matches(ROLE_REGEX), "User must have a legal user role")
+  //   //       .get();
+  //   //   filters.add(eq(ROLE_KEY, role));
+  //   // }
 
-    // Combine the list of filters into a single filtering document.
-    Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
+  //   // Combine the list of filters into a single filtering document.
+  //   Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);
 
-    return combinedFilter;
-  }
+  //   return combinedFilter;
+  // }
 
-  private Bson constructSortingOrder(Context ctx) {
-    // Sort the results. Use the `sortby` query param (default "name")
-    // as the field to sort by, and the query param `sortorder` (default
-    // "asc") to specify the sort order.
-    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortby"), "name");
-    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortorder"), "asc");
-    Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
-    return sortingOrder;
-  }
+  // private Bson constructSortingOrder(Context ctx) {
+  //   // Sort the results. Use the `sortby` query param (default "name")
+  //   // as the field to sort by, and the query param `sortorder` (default
+  //   // "asc") to specify the sort order.
+  //   String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortby"), "name");
+  //   String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortorder"), "asc");
+  //   Bson sortingOrder = sortOrder.equals("desc") ? Sorts.descending(sortBy) : Sorts.ascending(sortBy);
+  //   return sortingOrder;
+  // }
 
   /**
    * Set the JSON body of the response to be a list of all the user names and IDs
@@ -341,16 +341,16 @@ public class TodoController implements Controller {
    *
    * @param str the string to generate a md5 for
    */
-  public String md5(String str) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance("MD5");
-    byte[] hashInBytes = md.digest(str.toLowerCase().getBytes(StandardCharsets.UTF_8));
+  // public String md5(String str) throws NoSuchAlgorithmException {
+  //   MessageDigest md = MessageDigest.getInstance("MD5");
+  //   byte[] hashInBytes = md.digest(str.toLowerCase().getBytes(StandardCharsets.UTF_8));
 
-    StringBuilder result = new StringBuilder();
-    for (byte b : hashInBytes) {
-      result.append(String.format("%02x", b));
-    }
-    return result.toString();
-  }
+  //   StringBuilder result = new StringBuilder();
+  //   for (byte b : hashInBytes) {
+  //     result.append(String.format("%02x", b));
+  //   }
+  //   return result.toString();
+  // }
 
   /**
    * Setup routes for the `user` collection endpoints.
@@ -381,10 +381,10 @@ public class TodoController implements Controller {
    */
   public void addRoutes(Javalin server) {
     // Get the specified user
-    server.get(API_TODO_BY_ID, this::getTodo);
+    // server.get(API_TODO_BY_ID, this::getTodo);
 
-    // List users, filtered using query parameters
-    server.get(API_TODOS, this::getTodos);
+    // // List users, filtered using query parameters
+    // server.get(API_TODOS, this::getTodos);
 
     // Get users, possibly filtered, grouped by company
     // server.get("/api/usersByCompany", this::getUsersGroupedByCompany);
