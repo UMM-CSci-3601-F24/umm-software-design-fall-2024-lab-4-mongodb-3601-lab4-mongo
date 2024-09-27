@@ -178,6 +178,11 @@ public class TodoControllerSpec {
     when(ctx.queryParamMap()).thenReturn(queryParams);
     when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
 
+    Validation validation = new Validation();
+    Validator<Boolean> validator = validation.validator(TodoController.STATUS_KEY, Boolean.class, statusString);
+
+    when(ctx.queryParamAsClass(TodoController.STATUS_KEY, Boolean.class)).thenReturn(validator);
+
     todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayListCaptor.capture());
