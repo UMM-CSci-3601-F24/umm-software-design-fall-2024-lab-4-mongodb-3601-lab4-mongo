@@ -1,4 +1,4 @@
-import { Component, signal, inject, /*computed*/ } from '@angular/core';
+import { Component, signal, inject, computed, /*computed*/ } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, combineLatest, of, /*switchMap,*/ tap } from 'rxjs';
 import { Todo } from './todo';
@@ -8,7 +8,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
-import { TodoCardComponent } from './todo-card.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
