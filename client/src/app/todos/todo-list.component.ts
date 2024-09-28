@@ -1,6 +1,6 @@
 import { Component, signal, inject, computed, /*computed*/ } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, /*Observable,*/ of, switchMap, tap } from 'rxjs';
 import { Todo } from './todo';
 import { TodoService } from './todo.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,11 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { TodoCardComponent } from './todo-card.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
@@ -39,6 +40,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
   ],
 })
 export class TodoListComponent {
@@ -58,6 +61,9 @@ export class TodoListComponent {
   // We are doing status and owner filtering server side so these are observables
   private todoOwner$ = toObservable(this.todoOwner);
   private todoStatus$ = toObservable(this.todoStatus);
+
+  myControl = new FormControl('');
+  categories: string[] = ['Video Games','Homework','Groceries','Software design'];
 
   serverFilteredTodos =
     toSignal(
@@ -97,4 +103,6 @@ export class TodoListComponent {
       category: this.todoCategory(),
     });
   });
+
+
 }

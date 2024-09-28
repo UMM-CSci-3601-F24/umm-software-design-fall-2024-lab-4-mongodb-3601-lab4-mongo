@@ -15,10 +15,21 @@
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
 
+          <!-- Angular implementation of autocomplete -->
           <mat-form-field class="input-field">
             <mat-label>Category</mat-label>
-            <input matInput data-test="todoCategoryInput" placeholder="Filter by category"
+            <input type="text"
+              placeholder="Pick a category"
+              aria-label="category"
+              matInput
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
               [(ngModel)]="todoCategory">
+            <mat-autocomplete #auto="matAutocomplete">
+              @for (category of categories; track category) {
+                <mat-option [value]="category">{{category}}</mat-option>
+              }
+            </mat-autocomplete>
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
         </div>
@@ -34,8 +45,8 @@
             <mat-label>Status</mat-label>
             <mat-select [(ngModel)]="todoStatus" data-test="todoStatusSelect">
               <mat-option>--</mat-option>
-              <mat-option value=true>complete</mat-option>
-              <mat-option value=false>incomplete</mat-option>
+              <mat-option value=true>Complete</mat-option>
+              <mat-option value=false>Incomplete</mat-option>
             </mat-select>
             <mat-hint>Filtered on server</mat-hint>
           </mat-form-field>
