@@ -68,12 +68,12 @@ export class TodoListComponent {
     toSignal(
       combineLatest([this.todoOwner$, this.todoStatus$]).pipe(
 
-      switchMap(([owner, status]) >
+      switchMap(([owner]) =>
         this.todoService.getTodos({
           owner,
-          status,
+          //status,
         })
-      )
+      ),
         // `catchError` is used to handle errors that might occur in the pipeline. In this case `userService.getUsers()`
         // can return errors if, for example, the server is down or returns an error. This catches those errors, and
         // sets the `errMsg` signal, which allows error messages to be displayed.
