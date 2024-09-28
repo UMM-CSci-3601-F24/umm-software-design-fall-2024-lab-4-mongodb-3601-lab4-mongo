@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 import { MockTodoService } from '../../testing/todo.service.mock';
 import { Todo } from './todo';
 import { TodoCardComponent } from './todo-card.component';
@@ -63,4 +63,10 @@ describe('Todo list', () => {
   it('contains all the todos', () => {
     expect(todoList.serverFilteredTodos().length).toBe(3);
   })
+  it('contains a todo with category Video Games', () => {
+    expect(todoList.serverFilteredTodos().some((todo: Todo) => todo.category === 'Video Games')).toBe(true);
+  });
+  // it('contain a todo with esse in the body', () => {
+  //   // expect(todoList.serverFilteredTodos().some((todo: Todo) => todo.body === 'Jamie')).toBe(true);
+  // });
 });

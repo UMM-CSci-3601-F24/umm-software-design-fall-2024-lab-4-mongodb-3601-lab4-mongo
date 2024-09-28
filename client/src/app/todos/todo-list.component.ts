@@ -47,7 +47,7 @@ export class TodoListComponent {
 
   //will need to update with rest of characteristics
   todoOwner = signal<string | undefined>(undefined);
-  todoStatus = signal<number | undefined>(undefined);
+  todoStatus = signal<boolean | undefined>(undefined);
   todoCategory = signal<string | undefined>(undefined);
   todoBody = signal<string | undefined>(undefined);
 
@@ -60,23 +60,15 @@ export class TodoListComponent {
   private todoStatus$ = toObservable(this.todoStatus);
 
   serverFilteredTodos =
-    // This `combineLatest` call takes the most recent values from these two observables (both built from
-    // signals as described above) and passes them into the following `.pipe()` call. If either of the
-    // `userRole` or `userAge` signals change (because their text fields get updated), then that will trigger
-    // the corresponding `userRole$` and/or `userAge$` observables to change, which will cause `combineLatest()`
-    // to send a new pair down the pipe.
     toSignal(
       combineLatest([this.todoOwner$, this.todoStatus$]).pipe(
 
-      switchMap(([owner]) =>
+      switchMap(([owner, status]) =>
         this.todoService.getTodos({
           owner,
-          //status,
+          status,
         })
       ),
-        // `catchError` is used to handle errors that might occur in the pipeline. In this case `userService.getUsers()`
-        // can return errors if, for example, the server is down or returns an error. This catches those errors, and
-        // sets the `errMsg` signal, which allows error messages to be displayed.
         catchError((err) => {
           if (err.error instanceof ErrorEvent) {
             this.errMsg.set(
@@ -93,17 +85,16 @@ export class TodoListComponent {
         }),
         // Tap allows you to perform side effects if necessary
         tap(() => {
-          // A common side effect is printing to the console.
-          // You don't want to leave code like this in the
-          // production system, but it can be useful in debugging.
-          // console.log('Users were filtered on the server')
         })
       )
     );
   filteredTodos = computed(() => {
     const serverFilteredTodos = this.serverFilteredTodos();
     return this.todoService.filterTodos(serverFilteredTodos, {
-      owner: this.todoOwner(),
+      // owner: this.todoOwner(),
+      // status: this.todoStatus(),
+      body: this.todoBody(),
+      category: this.todoCategory(),
     });
   });
 }
