@@ -104,8 +104,8 @@ public class TodoControllerSpec {
       new Document()
           .append("owner", "Blanche")
           .append("status", false)
-          .append("body", "In sunt ex non tempor cillum commodo amet incididunt anim qui" +
-          " commodo quis. Cillum non labore ex sint esse.")
+          .append("body", "In sunt ex non tempor cillum commodo amet incididunt anim qui"
+          + " commodo quis. Cillum non labore ex sint esse.")
           .append("category", "software design"));
     // samsId = new ObjectId();
     // Document sam = new Document()
@@ -115,8 +115,8 @@ public class TodoControllerSpec {
         new Document()
             .append("owner", "Fry")
             .append("status", false)
-            .append("body", "Ipsum esse est ullamco magna tempor anim laborum non officia deserunt " +
-            "veniam commodo. Aute minim incididunt ex commodo.")
+            .append("body", "Ipsum esse est ullamco magna tempor anim laborum non officia deserunt "
+            + "veniam commodo. Aute minim incididunt ex commodo.")
             .append("category", "video games")
       );
       testTodos.add(
