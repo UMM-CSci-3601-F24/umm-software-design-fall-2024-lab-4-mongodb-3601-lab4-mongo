@@ -4,9 +4,9 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+//import java.nio.charset.StandardCharsets;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +28,13 @@ import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
-import io.javalin.validation.Validator;
+//import io.javalin.validation.Validator;
 import umm3601.Controller;
 
 public class TodoController implements Controller {
 
-  private static final String API_TODOS = "/api/todos";
-  private static final String API_TODO_BY_ID = "/api/todos/{id}";
+  // private static final String API_TODOS = "/api/todos";
+  // private static final String API_TODO_BY_ID = "/api/todos/{id}";
   static final String OWNER_KEY = "owner";
   static final String STATUS_KEY = "status";
   static final String BODY_KEY = "body";
