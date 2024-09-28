@@ -32,15 +32,42 @@
 <div class="flex-row">
   @if(serverFilteredTodos()) {
     <div class="flex-1">
-      @switch (viewType()) {
-        @case ('card') {
-          <div class="todo-card-container flex-row gap-8 flex-wrap">
-            @for (todo of filteredTodos(); track todo._id) {
-              <app-todo-card [simple]="true" class="todo-card" [todo]="todo" ></app-todo-card>
-            }
-          </div>
+      <div>
+        @switch (viewType()) {
+          @case ('card') {
+            <div class="todo-card-container flex-row gap-8 flex-wrap">
+              @for (todo of filteredTodos(); track todo._id) {
+                <app-todo-card [simple]="true" class="todo-card" [todo]="todo" ></app-todo-card>
+              }
+            </div>
+          }
+          @case('list') {
+            <mat-card>
+              <mat-card-content>
+                <mat-nav-list class="todo-nav-list">
+                  <h3 mat-subheader>Todos</h3>
+                  @for (todo of filteredTodos(); track todo._id) {
+                    <a mat-list-item [routerLink]="['/todos',todo._id]" class="todo-list-item">
+                      <span matListItemTitle mat-line class="todo-list-owner">{{todo.owner}}</span>
+                      <span matListItemLine class="todo-list-category"> {{todo.category}}</span>
+                    </a>
+                  }
+                </mat-nav-list>
+              </mat-card-content>
+            </mat-card>
+          }
         }
-      }
+      </div>
+    </div>
+  } @else {
+    <div class="flex-1" class="todo-error">
+      <mat-error>
+        There was a problem loading the todos. Possibly the server is down or perhaps there are network
+        issues.
+      </mat-error>
+      <mat-error>
+        Please wait a bit and try again or start the server.
+      </mat-error>
     </div>
   }
 </div>

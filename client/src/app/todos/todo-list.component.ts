@@ -1,6 +1,6 @@
 import { Component, signal, inject, computed, /*computed*/ } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, combineLatest, of, /*switchMap,*/ tap } from 'rxjs';
+import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { Todo } from './todo';
 import { TodoService } from './todo.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
+import { TodoCardComponent } from './todo-card.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
@@ -16,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { /*toObservable,*/ toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-todo-list-component',
@@ -32,7 +33,7 @@ import { /*toObservable,*/ toSignal } from '@angular/core/rxjs-interop';
     MatSelectModule,
     MatOptionModule,
     MatRadioModule,
-    // UserCardComponent,
+    TodoCardComponent,
     MatListModule,
     RouterLink,
     MatButtonModule,
@@ -46,12 +47,17 @@ export class TodoListComponent {
 
   //will need to update with rest of characteristics
   todoOwner = signal<string | undefined>(undefined);
-  userStatus = signal<number | undefined>(undefined);
-  userCategory = signal<string | undefined>(undefined);
+  todoStatus = signal<number | undefined>(undefined);
+  todoCategory = signal<string | undefined>(undefined);
+  todoBody = signal<string | undefined>(undefined);
 
   viewType = signal<'card' | 'list'>('card');
 
   errMsg = signal<string | undefined>(undefined);
+
+  // We are doing status and owner filtering server side so these are observables
+  private todoOwner$ = toObservable(this.todoOwner);
+  private todoStatus$ = toObservable(this.todoStatus);
 
   serverFilteredTodos =
     // This `combineLatest` call takes the most recent values from these two observables (both built from
@@ -60,8 +66,14 @@ export class TodoListComponent {
     // the corresponding `userRole$` and/or `userAge$` observables to change, which will cause `combineLatest()`
     // to send a new pair down the pipe.
     toSignal(
-      combineLatest().pipe(
+      combineLatest([this.todoOwner$, this.todoStatus$]).pipe(
 
+      switchMap(([owner, status]) >
+        this.todoService.getTodos({
+          owner,
+          status,
+        })
+      )
         // `catchError` is used to handle errors that might occur in the pipeline. In this case `userService.getUsers()`
         // can return errors if, for example, the server is down or returns an error. This catches those errors, and
         // sets the `errMsg` signal, which allows error messages to be displayed.
