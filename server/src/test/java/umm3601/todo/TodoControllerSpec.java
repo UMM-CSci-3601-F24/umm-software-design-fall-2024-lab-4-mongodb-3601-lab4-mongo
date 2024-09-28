@@ -171,6 +171,24 @@ public class TodoControllerSpec {
   }
 
   @Test
+  void getTodosByOwnerCAPS() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String ownerString = "frY";
+    queryParams.put(TodoController.OWNER_KEY, Arrays.asList(new String[] {ownerString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.OWNER_KEY)).thenReturn(ownerString);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(2, todoArrayListCaptor.getValue().size());
+    for (Todo todo : todoArrayListCaptor.getValue()) {
+      assertEquals("Fry", todo.owner);
+    }
+  }
+
+  @Test
   void getTodosByStatus() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
     String statusString = "true";
@@ -188,5 +206,25 @@ public class TodoControllerSpec {
     verify(ctx).json(todoArrayListCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
     assertEquals(1, todoArrayListCaptor.getValue().size());
+  }
+
+  @Test
+  void getTodosByStatus2() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String statusString = "false";
+    queryParams.put(TodoController.STATUS_KEY, Arrays.asList(new String[] {statusString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
+
+    Validation validation = new Validation();
+    Validator<Boolean> validator = validation.validator(TodoController.STATUS_KEY, Boolean.class, statusString);
+
+    when(ctx.queryParamAsClass(TodoController.STATUS_KEY, Boolean.class)).thenReturn(validator);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(2, todoArrayListCaptor.getValue().size());
   }
 }
