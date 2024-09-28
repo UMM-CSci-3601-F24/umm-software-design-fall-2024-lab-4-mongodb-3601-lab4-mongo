@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 @Component({
   selector: 'app-todo-list-component',
   templateUrl: 'todo-list.component.html',
@@ -42,6 +42,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
     MatIconModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
   ],
 })
 export class TodoListComponent {
