@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class UserSpec {
-
+public class TodoSpec {
   private static final String FAKE_ID_STRING_1 = "fakeIdOne";
   private static final String FAKE_ID_STRING_2 = "fakeIdTwo";
 
@@ -21,7 +20,7 @@ class UserSpec {
   }
 
   @Test
-  void todosWithEqualIdAreEqual() {
+  void usersWithEqualIdAreEqual() {
     todo1._id = FAKE_ID_STRING_1;
     todo2._id = FAKE_ID_STRING_1;
 
@@ -29,7 +28,7 @@ class UserSpec {
   }
 
   @Test
-  void todosWithDifferentIdAreNotEqual() {
+  void usersWithDifferentIdAreNotEqual() {
     todo1._id = FAKE_ID_STRING_1;
     todo2._id = FAKE_ID_STRING_2;
 
@@ -51,3 +50,4 @@ class UserSpec {
     assertFalse(todo1.equals(FAKE_ID_STRING_1));
   }
 }
+

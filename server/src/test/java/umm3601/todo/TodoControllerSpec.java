@@ -1,27 +1,41 @@
 package umm3601.todo;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static com.mongodb.client.model.Filters.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertNotEquals;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+//import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
-// import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-// import java.util.Collections;
+//import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+//import java.util.stream.Collectors;
 
 import org.bson.Document;
+//import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+//import org.mockito.ArgumentMatcher;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
@@ -30,18 +44,25 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import io.javalin.Javalin;
+//import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
-// import io.javalin.http.HttpStatus;
-// import io.javalin.json.JavalinJackson;
-// import umm3601.user.UserController;
+import io.javalin.http.HttpStatus;
+//import io.javalin.http.NotFoundResponse;
+//import io.javalin.json.JavalinJackson;
+//import io.javalin.validation.BodyValidator;
+import io.javalin.validation.Validation;
+//import io.javalin.validation.ValidationError;
+//import io.javalin.validation.ValidationException;
+import io.javalin.validation.Validator;
 
+@SuppressWarnings({ "MagicNumber" })
 public class TodoControllerSpec {
-
   private TodoController todoController;
+
   private static MongoClient mongoClient;
   private static MongoDatabase db;
 
-  // private static JavalinJackson javalinJackson = new JavalinJackson();
+  //private static JavalinJackson javalinJackson = new JavalinJackson();
 
   @Mock
   private Context ctx;
@@ -64,8 +85,6 @@ public class TodoControllerSpec {
             .applyToClusterSettings(builder -> builder.hosts(Arrays.asList(new ServerAddress(mongoAddr))))
             .build());
     db = mongoClient.getDatabase("test");
-
-
   }
 
   @AfterAll
@@ -79,54 +98,168 @@ public class TodoControllerSpec {
     MockitoAnnotations.openMocks(this);
     MongoCollection<Document> todoDocuments = db.getCollection("todos");
     todoDocuments.drop();
+    List<Document> testTodos = new ArrayList<>();
+    testTodos.add(
+      new Document()
+          .append("owner", "Blanche")
+          .append("status", false)
+          .append("body", "In sunt ex non tempor cillum commodo amet incididunt anim qui"
+          + " commodo quis. Cillum non labore ex sint esse.")
+          .append("category", "software design")
+          );
+      testTodos.add(
+        new Document()
+            .append("owner", "Fry")
+            .append("status", false)
+            .append("body", "Ipsum esse est ullamco magna tempor anim laborum non officia deserunt "
+            + "veniam commodo. Aute minim incididunt ex commodo.")
+            .append("category", "video games")
+      );
+      testTodos.add(
+        new Document()
+            .append("owner", "Fry")
+            .append("status", true)
+            .append("body", "Ullamco irure laborum magna dolor non. Anim occaecat adipisicing cillum eu magna in.")
+            .append("category", "homework")
+      );
+
+
+    todoDocuments.insertMany(testTodos);
 
     todoController = new TodoController(db);
   }
 
-   @Test
-  public void canBuildController() throws IOException {
-    Javalin mockServer = Mockito.mock(Javalin.class);
-    todoController.addRoutes(mockServer);
+  @Test
+    public void canBuildController() throws IOException {
+     Javalin mockServer = Mockito.mock(Javalin.class);
+     todoController.addRoutes(mockServer);
 
-    // Verify that calling `addRoutes()` above caused `get()` to be called
-    // on the server at least twice. We use `any()` to say we don't care about
-    // the arguments that were passed to `.get()`.
-    verify(mockServer, Mockito.atLeast(0)).get(any(), any()); //omg this is bad please change me
+     verify(mockServer, Mockito.atLeast(0)).get(any(), any()); //omg this is evil pls change :p
+   }
+
+  @Test
+  void canGetAllTodos() throws IOException {
+    when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    assertEquals(db.getCollection("todos").countDocuments(), todoArrayListCaptor.getValue().size());
   }
 
-  // @Test
-  // void canGetAllTodos() throws IOException {
-  //   // When something asks the (mocked) context for the queryParamMap,
-  //   // it will return an empty map (since there are no query params in this case
-  //   // where we want all users)
-  //   when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
+@Test
+  void getTodosByOwner() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String ownerString = "Fry";
+    queryParams.put(TodoController.OWNER_KEY, Arrays.asList(new String[] {ownerString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.OWNER_KEY)).thenReturn(ownerString);
 
-  //   // Now, go ahead and ask the userController to getUsers
-  //   // (which will, indeed, ask the context for its queryParamMap)
-  //   todoController.getTodos(ctx);
+    todoController.getTodos(ctx);
 
-  //   // We are going to capture an argument to a function, and the type of that
-  //   // argument will be
-  //   // of type ArrayList<User> (we said so earlier using a Mockito annotation like
-  //   // this):
-  //   // @Captor
-  //   // private ArgumentCaptor<ArrayList<User>> userArrayListCaptor;
-  //   // We only want to declare that captor once and let the annotation
-  //   // help us accomplish reassignment of the value for the captor
-  //   // We reset the values of our annotated declarations using the command
-  //   // `MockitoAnnotations.openMocks(this);` in our @BeforeEach
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(2, todoArrayListCaptor.getValue().size());
+    for (Todo todo : todoArrayListCaptor.getValue()) {
+      assertEquals("Fry", todo.owner);
+    }
+  }
 
-  //   // Specifically, we want to pay attention to the ArrayList<User> that is passed
-  //   // as input
-  //   // when ctx.json is called --- what is the argument that was passed? We capture
-  //   // it and can refer to it later
-  //   verify(ctx).json(todoArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
+  @Test
+  void getTodosByOwner2() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String ownerString = "Owen";
+    queryParams.put(TodoController.OWNER_KEY, Arrays.asList(new String[] {ownerString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.OWNER_KEY)).thenReturn(ownerString);
 
-  //   // Check that the database collection holds the same number of documents as the
-  //   // size of the captured List<User>
-  //   assertEquals(db.getCollection("users").countDocuments(), todoArrayListCaptor.getValue().size());
-  // }
+    todoController.getTodos(ctx);
 
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(0, todoArrayListCaptor.getValue().size());
+    for (Todo todo : todoArrayListCaptor.getValue()) {
+      assertEquals("", todo.owner);
+    }
+  }
 
+  @Test
+  void getTodosByOwnerCAPS() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String ownerString = "frY";
+    queryParams.put(TodoController.OWNER_KEY, Arrays.asList(new String[] {ownerString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.OWNER_KEY)).thenReturn(ownerString);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(2, todoArrayListCaptor.getValue().size());
+    for (Todo todo : todoArrayListCaptor.getValue()) {
+      assertEquals("Fry", todo.owner);
+    }
+  }
+
+  @Test
+  void getTodosByStatus() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String statusString = "true";
+    queryParams.put(TodoController.STATUS_KEY, Arrays.asList(new String[] {statusString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
+
+    Validation validation = new Validation();
+    Validator<Boolean> validator = validation.validator(TodoController.STATUS_KEY, Boolean.class, statusString);
+
+    when(ctx.queryParamAsClass(TodoController.STATUS_KEY, Boolean.class)).thenReturn(validator);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(1, todoArrayListCaptor.getValue().size());
+  }
+
+  @Test
+  void getTodosByStatus2() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String statusString = "false";
+    queryParams.put(TodoController.STATUS_KEY, Arrays.asList(new String[] {statusString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
+
+    Validation validation = new Validation();
+    Validator<Boolean> validator = validation.validator(TodoController.STATUS_KEY, Boolean.class, statusString);
+
+    when(ctx.queryParamAsClass(TodoController.STATUS_KEY, Boolean.class)).thenReturn(validator);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(2, todoArrayListCaptor.getValue().size());
+  }
+
+  @Test
+  void getTodosByStatus3() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    String statusString = "TRUE";
+    queryParams.put(TodoController.STATUS_KEY, Arrays.asList(new String[] {statusString}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    when(ctx.queryParam(TodoController.STATUS_KEY)).thenReturn(statusString);
+
+    Validation validation = new Validation();
+    Validator<Boolean> validator = validation.validator(TodoController.STATUS_KEY, Boolean.class, statusString);
+
+    when(ctx.queryParamAsClass(TodoController.STATUS_KEY, Boolean.class)).thenReturn(validator);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+    assertEquals(1, todoArrayListCaptor.getValue().size());
+  }
 }
