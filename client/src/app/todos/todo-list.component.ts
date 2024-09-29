@@ -49,13 +49,12 @@ export class TodoListComponent {
   private todoService = inject(TodoService);
   private snackBar = inject(MatSnackBar);
 
-  //will need to update with rest of characteristics
   todoOwner = signal<string | undefined>(undefined);
-  todoStatus = signal<boolean | undefined>(undefined);
+  todoStatus = signal<string | undefined>(undefined);
   todoCategory = signal<string | undefined>(undefined);
   todoBody = signal<string | undefined>(undefined);
 
-  viewType = signal<'card' | 'list'>('card');
+  viewType = signal<'card' | 'list'>('list');
 
   errMsg = signal<string | undefined>(undefined);
 

@@ -37,7 +37,7 @@ export class MockTodoService extends TodoService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getTodos(_filters: {owner?: string; status?: boolean}): Observable<Todo[]> {
+  getTodos(_filters: {owner?: string; status?: string}): Observable<Todo[]> {
     return of(MockTodoService.testTodos);
   }
 }

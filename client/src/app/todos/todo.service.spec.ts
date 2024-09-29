@@ -85,7 +85,7 @@ describe('TodoService', () => {
     it('correctly calls api/todos with filter parameter status = true', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
 
-      todoService.getTodos({ status: true }).subscribe(() => {
+      todoService.getTodos({ status: 'true' }).subscribe(() => {
         expect(mockedMethod)
           .withContext('one call')
           .toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('TodoService', () => {
     it('correctly calls api/todos with filter parameter status = false', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
 
-      todoService.getTodos({ status:false }).subscribe(() => {
+      todoService.getTodos({ status: 'false' }).subscribe(() => {
         expect(mockedMethod)
           .withContext('one call')
           .toHaveBeenCalledTimes(1);
@@ -110,7 +110,7 @@ describe('TodoService', () => {
 
   it('correctly calls api/todos with multiple filter parameters(status and owner)', () => {
     const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
-    todoService.getTodos({owner: "Fry", status: false}).subscribe(() => {
+    todoService.getTodos({owner: "Fry", status: 'false'}).subscribe(() => {
       const [url, options] = mockedMethod.calls.argsFor(0);
       const calledHttpParams: HttpParams = (options.params) as HttpParams;
       expect(mockedMethod)
