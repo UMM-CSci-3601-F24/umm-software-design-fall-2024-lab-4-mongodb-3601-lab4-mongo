@@ -67,6 +67,27 @@ describe('TodoService', () => {
     }));
   });
 
+  describe('When given quantity limitTodos() returns appropriate amount of todos', () => {
+    it('inputs limit quantity', waitForAsync(() => {
+      //const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
+
+      const limit = 1;
+      const filteredTodos = todoService.limitTodos(testTodos,limit);
+      expect(filteredTodos.length).toBe(1);
+
+    }));
+  });
+
+  describe('When given negative quantity limitTodos() returns error', () => {
+    it('inputs limit quantity', waitForAsync(() => {
+      //const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
+
+      const limit = -1;
+      const filteredTodos = todoService.limitTodos(testTodos,limit);
+      expect(filteredTodos.length).toBe(0);
+
+    }));
+  });
   // describe('when getTodos() is called with parameters, it correctly forms the http request', () => {
   //   o
   // })
