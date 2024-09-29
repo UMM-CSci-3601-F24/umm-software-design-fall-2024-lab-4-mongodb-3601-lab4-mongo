@@ -13,7 +13,7 @@
               data-test="todoOwnerInput"
               placeholder="Filter by owner"
               [(ngModel)]="todoOwner"
-              (input)="updateFilter()"
+              (input)="getTodosFromServer()"
             />
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
