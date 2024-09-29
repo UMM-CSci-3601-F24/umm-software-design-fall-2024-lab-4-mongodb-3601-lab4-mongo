@@ -54,7 +54,41 @@ import io.javalin.validation.Validation;
 import io.javalin.validation.ValidationError;
 import io.javalin.validation.ValidationException;
 import io.javalin.validation.Validator;
+import umm3601.todo.todoController;
 
 public class TodoControllerSpec {
+@SuppressWarnings({ "MagicNumber" })
+class todoControllerSpec {
 
+  private TodoController todoController;
+
+  private ObjectId samsId;
+
+  private static MongoClient mongoClient;
+  private static MongoDatabase db;
+
+  private static JavalinJackson javalinJackson = new JavalinJackson();
+
+  @Mock
+  private Context ctx;
+
+  @Captor
+  private ArgumentCaptor<ArrayList<Todo>> todoArrayListCaptor;
+
+  @Captor
+  private ArgumentCaptor<Todo> todoCaptor;
+
+  @Captor
+  private ArgumentCaptor<Map<String, String>> mapCaptor;
+}
+
+@BeforeAll
+static void setupAll() {
+  String mongoAddr = System.getenv().getOrDefault("MONGO_ADDR", "localhost");
+
+  mongoClient = MongoClients.create(
+      MongoClientSettings.builder()
+          .applyToClusterSettings(builder -> builder.hosts(Arrays.asList(new ServerAddress(mongoAddr))))
+          .build());
+  db = mongoClient.getDatabase("test");
 }
