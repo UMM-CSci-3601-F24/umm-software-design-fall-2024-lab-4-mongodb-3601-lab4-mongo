@@ -45,8 +45,8 @@
             <mat-label>Status</mat-label>
             <mat-select [(ngModel)]="todoStatus" data-test="todoStatusSelect">
               <mat-option>--</mat-option>
-              <mat-option value='true'>Complete</mat-option>
-              <mat-option value='false'>Incomplete</mat-option>
+              <mat-option value=true>Complete</mat-option>
+              <mat-option value=false>Incomplete</mat-option>
             </mat-select>
             <mat-hint>Filtered on server</mat-hint>
           </mat-form-field>
@@ -55,7 +55,7 @@
         <br>
         <div class="flex-row gap-8 flex-wrap">
           <label for="viewType">View type: </label>
-          <mat-radio-group aria-label="View type" [(ngModel)]="viewType" data-test="viewTypeRadio">
+          <mat-radio-group aria-label="View type" data-test="viewTypeRadio" [(ngModel)]="viewType">
             <mat-radio-button value="card">Card</mat-radio-button>
             <mat-radio-button value="list">List</mat-radio-button>
           </mat-radio-group>
@@ -72,13 +72,15 @@
       <div>
         @switch (viewType()) {
           @case ('card') {
-            <div class="todo-card-container flex-row gap-8 flex-wrap">
+            <br>
+            <div class="todo-cards-container flex-row gap-8 flex-wrap">
               @for (todo of filteredTodos(); track todo._id) {
                 <app-todo-card [simple]="true" class="todo-card" [todo]="todo" ></app-todo-card>
               }
             </div>
           }
           @case('list') {
+            <br>
             <mat-card>
               <mat-card-content>
                 <mat-nav-list class="todo-nav-list">
@@ -86,7 +88,7 @@
                   @for (todo of filteredTodos(); track todo._id) {
                     <a mat-list-item [routerLink]="['/todos',todo._id]" class="todo-list-item">
                       <span matListItemTitle mat-line class="todo-list-owner">{{todo.owner}}</span>
-                      <span matListItemLine class="todo-list-category"> {{todo.category}}</span>
+                      <span matListItemLine class="todo-list-category">{{todo.category}}</span>
                       @if(todo.status) {
                         <span matListItemLine class="todo-list-status">Complete</span>
                       } @else {

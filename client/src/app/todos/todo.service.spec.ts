@@ -97,7 +97,7 @@ describe('TodoService', () => {
     it('correctly calls api/todos with filter parameter status = false', () => {
       const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
 
-      todoService.getTodos({ status: false }).subscribe(() => {
+      todoService.getTodos({ status:false }).subscribe(() => {
         expect(mockedMethod)
           .withContext('one call')
           .toHaveBeenCalledTimes(1);
@@ -119,6 +119,7 @@ describe('TodoService', () => {
       expect(url)
         .withContext('talks to the correct endpoints')
         .toEqual(todoService.todoUrl);
+        console.log(todoService.todoUrl);
       expect(calledHttpParams.keys().length)
         .withContext('should have 2 params')
         .toEqual(2);
@@ -128,7 +129,6 @@ describe('TodoService', () => {
       expect(calledHttpParams.get('status'))
         .withContext('status is false/incomplete')
         .toEqual('false');
-    })
-  })
-
-})
+    });
+  });
+});

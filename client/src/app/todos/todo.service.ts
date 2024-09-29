@@ -41,7 +41,7 @@ export class TodoService {
   filterTodos(todos: Todo[], filters: {body?: string; category?: string}): Todo[] {
     let filteredTodos = todos;
 
-    // Filter by owner
+    // Filter by body
     if (filters.body) {
       filters.body = filters.body.toLowerCase();
       filteredTodos = filteredTodos.filter(todo => todo.body.toLowerCase().indexOf(filters.body) !== -1);
