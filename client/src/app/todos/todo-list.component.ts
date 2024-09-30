@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-todo-list-component',
   templateUrl: 'todo-list.component.html',
@@ -54,6 +54,8 @@ export class TodoListComponent {
   todoStatus = signal<boolean | undefined>(undefined);
   todoCategory = signal<string | undefined>(undefined);
   todoBody = signal<string | undefined>(undefined);
+  pageSize = signal<number>(10);
+  pageNumber = signal<number>(0);
 
   viewType = signal<'card' | 'list'>('card');
 
@@ -105,5 +107,17 @@ export class TodoListComponent {
     });
   });
 
+  getNumTodos = computed(() => {
+    // const filteredTodos = this.filteredTodos();
+    // return filteredTodos.length
+    return 150;
+  });
 
+  handlePageEvent($event: PageEvent) {
+    this.pageNumber.set($event.pageIndex);
+    this.pageSize.set($event.pageSize);
+  }
+  displayTodos= computed(() => {
+    return this.filteredTodos().slice(this.pageNumber()*this.pageSize(), Math.min((this.pageNumber() + 1)*this.pageSize(), this.getNumTodos()));
+  });
 }
