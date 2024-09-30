@@ -53,10 +53,11 @@ export class TodoService {
     return filteredTodos;
   }
 
-  limitTodos(todos: Todo[], limit: number): Todo[] {
-    if (limit < 0) {
-      throw new Error("Limit must be a non-negative number.");
-    }
-    return todos.slice(0, limit);
-  }
+  //depreciated
+  // limitTodos(todos: Todo[], limit: number): Todo[] {
+  //   if (limit < 0) {
+  //     throw new Error("Limit must be a non-negative number.");
+  //   }
+  //   return todos.slice(0, limit);
+  // }
 }

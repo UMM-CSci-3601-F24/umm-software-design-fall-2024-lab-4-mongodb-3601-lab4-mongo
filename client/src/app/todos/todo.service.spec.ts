@@ -67,6 +67,8 @@ describe('TodoService', () => {
     }));
   });
 
+  //depreciated tests from before paginator
+  /*
   describe('When given quantity limitTodos() returns appropriate amount of todos', () => {
     it('inputs limit quantity', waitForAsync(() => {
       //const mockedMethod = spyOn(httpClient, 'get').and.returnValue(of(testTodos));
@@ -88,8 +90,6 @@ describe('TodoService', () => {
 
     }));
   });
-  // describe('when getTodos() is called with parameters, it correctly forms the http request', () => {
-  //   o
-  // })
+  */
 
 })

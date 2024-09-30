@@ -108,9 +108,10 @@ export class TodoListComponent {
   });
 
   getNumTodos = computed(() => {
-    // const filteredTodos = this.filteredTodos();
-    // return filteredTodos.length
-    return 150;
+    if (this.filteredTodos() === undefined) {
+      return 0;
+    }
+    return this.filteredTodos().length
   });
 
   handlePageEvent($event: PageEvent) {
