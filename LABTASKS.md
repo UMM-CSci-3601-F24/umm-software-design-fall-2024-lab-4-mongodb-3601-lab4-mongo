@@ -10,8 +10,8 @@
 
 ## Getting started
 
-- [ ] Remember to set up your project on GitHub Projects with your stories and estimates
-- [ ] Turn in the URL of the GitHub repository for your group in Canvas. This will make it easier for us to figure out which team is "Snoozing Llamas".
+- [X] Remember to set up your project on GitHub Projects with your stories and estimates
+- [X] Turn in the URL of the GitHub repository for your group in Canvas. This will make it easier for us to figure out which team is "Snoozing Llamas".
 
 Definitely ask if you're ever confused about what you need to do for a given task.
 
