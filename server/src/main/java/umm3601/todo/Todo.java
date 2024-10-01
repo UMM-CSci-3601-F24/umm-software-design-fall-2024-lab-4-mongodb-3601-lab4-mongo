@@ -44,7 +44,7 @@ public class Todo {
   // the better bet.
   @Override
   public String toString() {
-    return owner;
+    return body;
   }
 }
 
